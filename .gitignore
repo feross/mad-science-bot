@@ -1,0 +1,4 @@
+secret/*
+!secret/index-sample.js
+
+tmp/

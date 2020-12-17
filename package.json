@@ -1,0 +1,24 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "standard",
+    "start": "node index.js",
+    "deploy": "./tools/trigger-deploy.sh",
+    "secret-download": "rsync -a -O -v --delete future:'/home/feross/bot/mad-science-bot/secret/' secret/",
+    "secret-upload": "rsync -a -O -v --delete secret/ future:'/home/feross/bot/mad-science-bot/secret/'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/rest": "^18.0.12",
+    "discord.js": "^12.5.1"
+  },
+  "type": "module",
+  "devDependencies": {
+    "standard": "^16.0.3"
+  }
+}
