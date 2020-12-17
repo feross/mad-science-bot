@@ -17,7 +17,7 @@ cp -a /home/feross/bot/mad-science-bot /home/feross/bot/build-mad-science-bot
 cd /home/feross/bot/build-mad-science-bot && git pull
 cd /home/feross/bot/build-mad-science-bot && rm -rf node_modules
 cd /home/feross/bot/build-mad-science-bot && npm ci --no-progress
-cd /home/feross/bot/build-mad-science-bot && npm run build
+cd /home/feross/bot/build-mad-science-bot && npm run build --if-present
 cd /home/feross/bot/build-mad-science-bot && npm prune --production --no-progress
 
 sudo supervisorctl stop mad-science-bot
