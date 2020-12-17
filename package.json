@@ -26,6 +26,7 @@
     "url": "git://github.com/feross/mad-science-bot.git"
   },
   "scripts": {
+    "build": "(chmod 777 db/ || true) && (chmod 777 db/state.json || true)",
     "deploy": "./tools/trigger-deploy.sh",
     "secret-download": "rsync -a -O -v --delete future:'/home/feross/bot/mad-science-bot/secret/' secret/",
     "secret-upload": "rsync -a -O -v --delete secret/ future:'/home/feross/bot/mad-science-bot/secret/'",

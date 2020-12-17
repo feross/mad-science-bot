@@ -7,8 +7,8 @@ import { stripIndent } from 'common-tags'
 
 import { discord as discordSecret } from './secret/index.js'
 
-const TMP_PATH = join(dirname(fileURLToPath(import.meta.url)), 'tmp')
-const STATE_PATH = join(TMP_PATH, 'state.json')
+const DB_PATH = join(dirname(fileURLToPath(import.meta.url)), 'db')
+const STATE_PATH = join(DB_PATH, 'state.json')
 const DISCORD_PREFIX = '!'
 
 let state = {
@@ -22,7 +22,7 @@ discord.login(discordSecret.botToken)
 discord.on('ready', init)
 
 async function init () {
-  await fs.mkdir(TMP_PATH, { recursive: true })
+  await fs.mkdir(DB_PATH, { recursive: true })
 
   try {
     state = JSON.parse(await fs.readFile(STATE_PATH, 'utf8'))
