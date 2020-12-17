@@ -29,6 +29,7 @@ async function init () {
   } catch (err) {
     // First run of the program
   }
+  console.log(state)
 
   setupBotCommands()
 
