@@ -4,5 +4,5 @@ set -e
 
 figlet "Deploying..."
 git push
-ssh future -t zsh -ci "/home/feross/bots/mad-science-bot/tools/deploy.sh"
+ssh future -t zsh -ci "/home/feross/bot/mad-science-bot/tools/deploy.sh"
 figlet "Deployed"
