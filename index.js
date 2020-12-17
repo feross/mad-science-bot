@@ -29,8 +29,6 @@ async function init () {
   } catch (err) {
     // First run of the program
   }
-  console.log(state)
-
   setupBotCommands()
 
   checkRepos()
@@ -89,6 +87,7 @@ async function postRepo (repo) {
 
 async function setupBotCommands () {
   discord.on('message', async message => {
+    if (message.channel.id !== discordSecret.channelId) return
     if (message.author.bot) return
     if (!message.content.startsWith(DISCORD_PREFIX)) return
 
