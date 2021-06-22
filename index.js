@@ -13,7 +13,8 @@ const DISCORD_PREFIX = '!'
 
 let state = {
   usernames: [],
-  repos: {}
+  repos: {},
+  stars: []
 }
 
 const octokit = new Octokit()
@@ -33,6 +34,9 @@ async function init () {
 
   checkRepos()
   setInterval(checkRepos, 60 * 60 * 1000) // 1 hour
+
+  checkStars()
+  setInterval(checkStars, (60 * 60 * 1000) + 20) // 1 hour
 }
 
 async function saveState () {
@@ -75,12 +79,47 @@ async function checkRepos (usernames = state.usernames) {
     }
   }
 
-  log('Done')
+  log('checkRepos Done')
+}
+
+async function checkStars (usernames = state.usernames) {
+  if (typeof usernames === 'string') usernames = [usernames]
+  for (const username of usernames) {
+    if (!state.stars) state.stars = []
+
+    const res = await octokit.activity.listReposStarredByUser({ username, per_page: 3 })
+
+    const repos = res.data
+      .map(repo => ({
+        name: repo.name,
+        description: repo.description,
+        fork: repo.fork,
+        url: repo.html_url,
+        owner: repo.owner.login,
+        createdAt: new Date(repo.created_at)
+      }))
+      .filter(repo => !state.stars.includes(repo.name))
+      .filter(repo => !usernames.includes(repo.owner.login))
+
+    for (const repo of repos) {
+      state.stars.push(repo.name)
+      await saveState()
+      await postStarredRepo(username, repo)
+    }
+  }
+  log('checkStars Done')
 }
 
 async function postRepo (repo) {
   const channel = await discord.channels.fetch(discordSecret.channelId)
   const message = `\`${repo.owner}\` just published \`${repo.name}\`${repo.description ? ` ${repo.description}` : ''} ${repo.url}`
+  await channel.send(message)
+  log(`Posted "${message}"`)
+}
+
+async function postStarredRepo (username, repo) {
+  const channel = await discord.channels.fetch(discordSecret.channelId)
+  const message = `\`${username}\` just starred \`${repo.name}\`${repo.description ? ` ${repo.description}` : ''} ${repo.url}`
   await channel.send(message)
   log(`Posted "${message}"`)
 }
