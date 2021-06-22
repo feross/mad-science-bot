@@ -26,7 +26,8 @@ async function init () {
   await fs.mkdir(DB_PATH, { recursive: true })
 
   try {
-    state = JSON.parse(await fs.readFile(STATE_PATH, 'utf8'))
+    const savedState = JSON.parse(await fs.readFile(STATE_PATH, 'utf8'))
+    state = { ...state, ...savedState }
   } catch (err) {
     // First run of the program
   }
