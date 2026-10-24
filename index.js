@@ -44,15 +44,23 @@ async function checkRepos (usernames = state.usernames) {
   for (const username of usernames) {
     if (!state.repos[username]) state.repos[username] = []
 
-    const res = await octokit.repos.listForUser({
-      username,
-      per_page: 100,
-      sort: 'created',
-      direction: 'desc'
-    })
+    let res
+    try {
+      res = await octokit.repos.listForUser({
+        username,
+        per_page: 100,
+        sort: 'created',
+        direction: 'desc'
+      })
 
-    if (res.status !== 200) {
-      throw new Error(`Non-200 response: ${res.status} ${JSON.stringify(res.data)}`)
+      if (res.status !== 200) {
+        throw new Error(`Non-200 response: ${res.status} ${JSON.stringify(res.data)}`)
+      }
+    } catch (err) {
+      // A watched user may have been deleted or renamed (404). Skip them so the
+      // users after them in the list still get checked.
+      log(`Skipping ${username}: ${err.message}`)
+      continue
     }
 
     const repos = res.data
